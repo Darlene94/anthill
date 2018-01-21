@@ -7,7 +7,7 @@ simulators = xsim
 
 depend = urv_core
          general_cores
-
+         wb_gpio
 [fileset xilinx_ip]
 usage = vivado
         xsim
