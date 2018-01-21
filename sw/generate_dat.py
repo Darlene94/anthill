@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 import sys
 import argparse
+import binascii
 
 parser = argparse.ArgumentParser(prog='gendatainit')
 parser.add_argument('in_file',  type=argparse.FileType('rb'))
@@ -29,10 +30,10 @@ while True:
     if (dword3 == b''):
         break
     else:
-        args.out_file.write(dword3.hex())
-        args.out_file.write(dword2.hex())
-        args.out_file.write(dword1.hex())
-        args.out_file.write(dword0.hex())
+        args.out_file.write(str(binascii.hexlify(dword3).decode('utf-8')))
+        args.out_file.write(str(binascii.hexlify(dword2).decode('utf-8')))
+        args.out_file.write(str(binascii.hexlify(dword1).decode('utf-8')))
+        args.out_file.write(str(binascii.hexlify(dword0).decode('utf-8')))
         args.out_file.write('\n')
 
 args.out_file.close()
