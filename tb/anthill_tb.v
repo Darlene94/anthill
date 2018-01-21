@@ -51,7 +51,8 @@ DUT (
   .uart_rxd_i ( uart_rxd_i ),
 
   .ck_io(ck_io),
-  .leds_o (leds_o)
+  .leds_o (leds_o),
+  .sw_i(4'b1010)
 );
 
 initial begin

@@ -32,7 +32,7 @@ Use fusesoc modified by MIET work group +
 `$ ./sw/generate_dat.py sw/uart_bootloader/uart_bootloader.bin sw/boot.dat`
 
 == Build System
-In the root directory of anthill project +
+In the root directory of anthill project +7
 `$ fusesoc --cores-root . build anthill --g_riscv_firmware=boot.dat` +
 `$ git checkout current_xsim` +
 `$ sudo apt install python3-pip` +
@@ -48,7 +48,7 @@ Resulting .bit file will be put in the `./build/anthill_0/bld_vivado/`
 
 == Simulation
 Simulation can be done with following command: +
-`$ fusesoc --cores-root . build anthill --g_riscv_firmware=boot.dat` +
+`$ fusesoc --cores-root . sim anthill --g_riscv_firmware=boot.dat` +
 Simulation output is vcd file `anthill.vcd` +
 It will be placed to `./build/anthill_0/sim-xsim/` +
 Results can be viewed with `GTKWave` (install with `sudo apt-get install gtkwave`)
