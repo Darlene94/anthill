@@ -50,7 +50,8 @@ entity anthill is
     pad_sclk_o : out std_logic;
     pad_mosi_o : out std_logic;
     pad_miso_i : in  std_logic;
-
+    
+    sw_i       : in  std_logic_vector(3 downto 0);
     leds_o     : out std_logic_vector(3 downto 0);
     ck_io      : out std_logic_vector(41 downto 0)
     );
@@ -105,6 +106,21 @@ architecture rtl of anthill is
       pad_mosi_o : out std_logic;
       pad_miso_i : in  std_logic);
   end component wb_spi_wrapper;
+  
+  component wrp_wb_gpio
+    port(
+      clk_sys_i     : in std_logic;
+      rst_n_i       : in std_logic;
+      
+      gpio_in_i     : in std_logic_vector(7 downto 0);
+      gpio_oen_o    : out std_logic_vector(7 downto 0);
+      gpio_out_o    : out std_logic_vector(7 downto 0);
+      
+      slave_i     : in  t_wishbone_slave_in;
+      slave_o     : out t_wishbone_slave_out;
+      desc_o      : out t_wishbone_device_descriptor
+    );
+  end component;
 
   component clk_pll is
     port
@@ -144,8 +160,9 @@ architecture rtl of anthill is
   signal reset_n_i : std_logic;
   signal clk_sys, sys_locked, sys_locked_n : std_logic;
   signal rst_n_sys, rst_sys : std_logic;
-
-  signal dummy, gpio_out, gpio_in, gpio_oen : std_logic_vector(31 downto 0);
+  
+  signaL gpio_out, gpio_in, gpio_oen : std_logic_vector(7 downto 0);
+  signal dummy : std_logic_vector(31 downto 0);
 begin  -- rtl
 
 
@@ -228,24 +245,22 @@ begin  -- rtl
       pad_mosi_o => pad_mosi_o,
       pad_miso_i => pad_miso_i);
 
-  U_GPIO : xwb_gpio_port
-    generic map (
-      g_interface_mode         => PIPELINED,
-      g_address_granularity    => BYTE,
-      g_num_pins               => 32,
-      -- we don't want a 3-state output
-      g_with_builtin_tristates => false)
+  U_GPIO : wrp_wb_gpio
     port map (
       clk_sys_i  => clk_sys,
       rst_n_i    => rst_n_sys,
       slave_i    => cnx_master_out(c_slave_gpio),
       slave_o    => cnx_master_in(c_slave_gpio),
-      gpio_b     => dummy,
-      gpio_out_o => gpio_out,
       gpio_in_i  => gpio_in,
-      gpio_oen_o => gpio_oen);
-
+      gpio_oen_o => gpio_oen,
+      gpio_out_o => gpio_out
+    );
+   
+  U_GPIO_PINOUT: for I in 0 to 3 generate begin
+    leds_o(I) <= gpio_out(I + 4) when (gpio_oen(I + 4) = '1') else '0';
+    gpio_in(I) <= sw_i(I) when (gpio_oen(I) = '0') else '0';
+    gpio_in(I + 4) <= sw_i(I) when (gpio_oen(I + 4) = '0') else '0';
+  end generate U_GPIO_PINOUT;
+  
   reset_n_i <= resetn;
-  leds_o <= gpio_out(3 downto 0);
-
 end rtl;
