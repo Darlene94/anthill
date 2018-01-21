@@ -1,8 +1,13 @@
-#include "../../board.h"
-#include <stdbool.h>
+#include "board.h"
 
-#define GPIO_CODR 0x0
-#define GPIO_SODR 0x4
+#define GPIO_DIRECTION 0x00
+#define GPIO_SET 0x04
+#define GPIO_RESET 0x08
+#define GPIO_READ 0x10
 
-void gpio_set(int pin, bool value);
+uint8_t gpio_read();
+uint8_t gpio_read_direction();
 
+void gpio_set(uint8_t state);
+void gpio_reset(uint8_t state);
+void gpio_set_direction(uint8_t state);
