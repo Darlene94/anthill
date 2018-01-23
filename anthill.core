@@ -26,6 +26,7 @@ usage = vivado
         xsim
 files =
   sw/boot.dat
+  sw/gpio_test.dat
 file_type=dat
 
 [fileset tb]

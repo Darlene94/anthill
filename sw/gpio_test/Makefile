@@ -7,7 +7,7 @@ OBJDUMP =	$(CROSS_COMPILE)objdump
 OBJCOPY =	$(CROSS_COMPILE)objcopy
 SIZE    =	$(CROSS_COMPILE)size
 
-BOARD_INCLUDE = /mnt/e/linux/dev/anthill/sw/headers
+BOARD_INCLUDE = ../headers
 BSP  = ../anthill_hwlib
 
 INCLUDE       = $(BSP)/periph_hwlib/include \
